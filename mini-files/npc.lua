@@ -24,3 +24,23 @@ Citizen.CreateThread(function()
     SetCreateRandomCopsNotOnScenarios(false) -- stop random cops (not in a scenario) from spawning
     SetCreateRandomCopsOnScenarios(false) -- stop random cops (in a scenario) from spawning
 end)
+
+Citizen.CreateThread(function()
+    while true do
+        Citizen.Wait(800)
+        local playerPed = PlayerPedId()
+        local vehicle = GetVehiclePedIsTryingToEnter(playerPed)
+
+        if vehicle and DoesEntityExist(vehicle) then
+            local driverPed = GetPedInVehicleSeat(vehicle, -1)
+
+            if GetVehicleDoorLockStatus(vehicle) == 7 then
+                SetVehicleDoorsLocked(vehicle, 2)
+            end
+
+            if driverPed and DoesEntityExist(driverPed) then
+                SetPedCanBeDraggedOut(driverPed, false)
+            end
+        end
+    end
+end)
